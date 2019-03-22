@@ -1,0 +1,137 @@
+# Adding default values to params
+def hello(greet="Hello", name="World"):
+    print("%s %s"%(greet, name))
+hello("Hi")           # Hi World
+
+
+# Using named params. So, order of args does NOT matter
+def hello1(greet, name):
+    print("%s %s"%(greet,name))
+hello(name="Mars", greet="Hello")
+
+
+""" Variable length function parameters allow to create a func,
+which accept any number of params. *params is treated as tuple."""
+def print_params(*params):
+    print(params)           # ('Hi', 'there')
+print_params("Hi", "there")
+
+
+""" Variable named params """
+def print_params2(**params):
+    print(params)           # {'a1': 1, 'a2': 2, 'a3': 3}
+print_params2(a1=1, a2=2, a3=3)
+
+
+# Combination of above func declarations
+def print_params3(b1,b2,b3=3,*pospar,**keypar):
+    print(b1,b2,b3,"\tpospar:",pospar,"\tkeypar:",keypar)
+print_params3(1,2,3,5,6,7,foo=1, bar=2)
+print_params3(1,2)
+print_params3(1,2,foo=1, bar=2)
+
+
+# LAMBDA Functions
+def make_inc(n):
+    return lambda x:x+n
+f = make_inc(42)
+#print(f)
+#f(0)                   # 42
+#f(5)                    # 47
+make_inc(100)(1)        # 100+1
+
+
+f = open(r'D:\temp\newtest.txt')
+f.read()
+#f.readline()
+f.close()
+
+
+# File Handling 1
+with open(r"D:\temp\newtest.txt","w") as fh:
+    fh.write("To write or not to write\n is the question!\n")
+
+
+# File Handling 1
+with open(r"D:\temp\newtest.txt") as fobj:
+    for line in fobj:
+        print(line.rstrip())
+
+
+# Copy a file
+fobj_in = open(r"D:\temp\newtest.txt")
+fobj_out= open(r"D:\temp\newtest-copy.txt","w")
+i = 1
+for line in fobj_in:
+    print(line.rstrip())
+    fobj_out.write(str(i)+":"+line)
+    i = i + 1
+fobj_in.close()
+fobj_out.close()
+
+
+# CLASSES & OBJECTS
+class Point:
+    
+    # Class variable shared by all instances
+    pi = 3.14
+    count = 0
+    
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+        self.pi = 3
+        Point.count = Point.count + 1
+        
+    def squareX(self):
+        return self.x ** 2
+    
+    # Operator Overloading
+    def __add__(self,other):
+        return Point(self.x+other.x, self.y+other.y)
+
+    # Like TOSTRING()
+    def __repr__(self):
+        return "{0} {1}".format(self.x, self.y)
+    
+p1 = Point(2,3)
+p2 = Point(4,5)
+print("Count::", Point.count)
+
+print (p1.x, p1.y)
+print(p1.squareX())
+print(p1 + p2)
+
+print("p1.pi: ",p1.pi)
+print("pi: ",Point.pi)
+print("p1.pi: ",p1.pi)
+
+
+# INHERITANCE : Create a class by inheriting all features from other class
+class A:
+    def hello(self):
+        print("Hello, I'm A")
+class B(A):
+    pass
+a = A()
+b = B()
+a.hello()
+b.hello()   # Derived classes may OVERRIDE METHODS from Base classes
+
+
+# EXCEPTION HANDLING
+try:
+    k = 12
+    if k==1:
+        print(55/0)
+    else:
+        raise IOError("Some IO issue")
+except ZeroDivisionError:
+    print("ZeroDivisionError handled")
+except (AttributeError, IOError):
+    print("AttributeError/IOError handled")
+except:
+    print("Other Exception handled")
+finally:
+    print("In finally()")
+
