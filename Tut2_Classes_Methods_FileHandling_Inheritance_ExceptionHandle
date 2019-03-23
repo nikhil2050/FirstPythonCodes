@@ -14,6 +14,10 @@ hello(name="Mars", greet="Hello")
 which accept any number of params. *params is treated as tuple."""
 def print_params(*params):
     print(params)           # ('Hi', 'there')
+    
+    for param in params:
+        print(param)         # Iterate all variables
+
 print_params("Hi", "there")
 
 
@@ -41,6 +45,165 @@ f = make_inc(42)
 make_inc(100)(1)        # 100+1
 
 
+# LAMBDA Filter (Fetch all nos. with filter)
+my_list = [1, 5, 4, 6, 8, 11, 3, 12]
+new_list = list( filter(lambda x:(x%2==0), my_list) )  #[4, 6, 8, 12]
+print(new_list)
+
+
+# LAMBDA Map (Square all nos. in list)
+my_list = [1, 5, 4, 6, 8, 11, 3, 12]
+new_list = list( map(lambda x:x*2, my_list))  #[2, 10, 8, 12, 16, 22, 6, 24] 
+print(new_list)
+
+
+# Higher Order Function -> Function as argument
+def summation(nums):
+    return sum(nums)
+def main2(f, *args):
+    result = f(*args)
+    print(result)
+#if __name__ == "__main__":      # What is this?????
+#    main2(summation, [1,2,3,4])
+main2(summation, [1,2,3,4])    
+
+
+
+# Higher Order Function -> Function as a return value
+def add_2nums(x,y):
+    return x+y
+def add_3nums(x,y,z):
+    return x+y+z
+def get_appropriate_funcs(num_len):
+    if num_len == 2:
+        return add_2nums
+    else:
+        return add_3nums
+    
+if __name__=="__main__":   # What is this?????
+    args = [1,2,3]
+    num_len = len(args)
+    res_func = get_appropriate_funcs(num_len)
+    print(res_func)        #<function add_3nums at 0x00000230BF7B4F28>
+    print(res_func(*args)) # 6
+
+
+# NESTED FUNCTION
+""" Encapsulation : Use inner functions to protect them from what is  
+happening outside of the function. ie. they are hidden from global scope"""
+
+def outer(num1):
+    def inner_incr(num1):  # Hidden from outer code
+        return num1 + 1
+    num2 = inner_incr(num1)
+    print(num1, num2)
+#inner_incr(10) # NameError: name 'inner_incr' is not defined
+outer(10)
+
+
+
+# RECURSIVE FUNCTION using inner function
+"""We can create inner function if same logic is being used at multiple places 
+within that function and one of the good use case for this is recursive function"""
+
+def factorial(number):
+    # Error handling
+    if not isinstance(number, int):
+        raise TypeError("Sorry. 'number' must be an integer.")
+    if not number >= 0:
+        raise ValueError("Sorry. 'number' must be zero or positive.")
+
+    def inner_factorial(number):
+        if number <= 1:
+            return 1
+        return number*inner_factorial(number-1)
+    return inner_factorial(number)
+
+# Call the outer function.
+print(factorial(3))
+
+
+
+# CURRYING(CLOSURE) FUNCTION
+"""In mathematics and computer science, currying is the technique of 
+breaking down the evaluation of a function that takes multiple arguments 
+into evaluating a sequence of single-argument functions.
+
+The purpose of function currying is to easily get specialized functions 
+from more general functions."""
+
+def outer_func(msg):
+    def inner_func():
+        print(msg)
+    return inner_func
+obj1 = outer_func("Hello")
+obj1()                      # Method 1 
+outer_func("Hi..")()        # Method 2
+
+
+
+# When to use CLOSURES ?
+""" Closures avoid the use of global values and provide some form of data-hiding.
+It can also provide an object-oriented solution to the problem.
+
+When there are few methods (one method in most cases) to be implemented in a class, 
+closures can provide an alternate and more elegant solutions.
+
+But when no. of attributes and methods get larger, better implement a class."""
+
+def make_multiple_of(n):
+    def multiplier(x):
+        return x*n
+    return multiplier
+
+times3 = make_multiple_of(3)
+times5 = make_multiple_of(5)
+
+print(times3(9))
+print(times5(3))
+
+
+
+# LOCAL & GLOBAL Variables
+myGlobal = "Global"
+def foo():
+    global myGlobal     # To change the value of global variable
+    myLocal = "Local"
+    myGlobal = myGlobal*3 # Changing global calue here
+    print(myGlobal)
+    print(myLocal)
+foo()
+
+
+
+# NONLOCAL Variables
+"""Nonlocal var are used in nested functions, whose local scope is undefined.
+So, var can be neither in local nor global scope. """
+globalVar = "glo-b-al"
+def outer():
+    outerVar = "local"
+    outerVar2 = "local"
+
+    def inner():
+        nonlocal outerVar
+        outerVar = "nonlocal"
+        outerVar2 = "nonlocal"
+        print("From inner() :\touterVar:",outerVar,"\touterVar2:",outerVar2)
+        # From inner() :	outerVar: nonlocal 	outerVar2: nonlocal
+        
+        global globalVar
+        globalVar = "globa-l"
+        print(globalVar)        # globa-l
+    inner()
+    print("From outer() :\touterVar:",outerVar,"\touterVar2:",outerVar2)
+    # From outer() :	outerVar: nonlocal 	outerVar2: local
+    
+    print(globalVar)            # globa-l
+outer()
+
+
+
+# FILE Handling (READ)
 f = open(r'D:\temp\newtest.txt')
 f.read()
 #f.readline()
@@ -68,6 +231,13 @@ for line in fobj_in:
     i = i + 1
 fobj_in.close()
 fobj_out.close()
+
+
+# IMPORT and HELP
+import math
+
+print(math.floor.__doc__)
+help(math.floor)
 
 
 # CLASSES & OBJECTS
